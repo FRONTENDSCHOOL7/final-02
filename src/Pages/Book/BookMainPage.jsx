@@ -3,10 +3,12 @@ import { Suspense } from 'react';
 import BookSlide from 'components/BookSlide/BookSlide';
 import MainSkeleton from 'assets/Skeleton/MainSkeleton';
 import Topbar from 'components/Common/Topbar/Topbar';
+import BookRecommend from 'components/Book/BookRecommend';
 export default function BookMainPage() {
   return (
     <>
       <Topbar title='책장' />
+      <BookRecommend />
       <Suspense fallback={<MainSkeleton />}>
         <BookSlide
           title='베스트 셀러'
