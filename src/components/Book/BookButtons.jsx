@@ -35,12 +35,17 @@ const BookButtons = ({ detailInfo }) => {
 
   const handleLikeButtonClick = async () => {
     try {
-      // 추천 버튼
       setLiked(!liked);
+
+      const bookData = {
+        title: detailInfo.title,
+        author: detailInfo.author,
+        imageURL: detailInfo.image || detailInfo.cover,
+      };
 
       if (userId) {
         // 추천 수 업데이트
-        await recommendBook(userId, bookId);
+        await recommendBook(userId, bookId, bookData);
 
         // 도서 정보를 다시 가져와서 추천 수 상태 업데이트
         const bookDetails = await getBookDetails(bookId);

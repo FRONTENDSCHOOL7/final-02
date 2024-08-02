@@ -12,6 +12,8 @@ import {
   increment,
   updateDoc,
   deleteDoc,
+  orderBy,
+  limit,
   where,
 } from 'firebase/firestore';
 import appFirestore from './config';
@@ -46,6 +48,8 @@ export const recommendBook = async (userId, bookId, bookData) => {
     const readingActivityDocRef = getReadingActivityDocRef(userId, bookId);
     const bookDocRef = getBookDocRef(bookId);
 
+    const bookDetails = await getBookDetails(bookId);
+
     await ensureBookExists(bookDocRef, bookData);
 
     // 독서 활동 문서가 존재하는지 확인
@@ -74,6 +78,12 @@ export const recommendBook = async (userId, bookId, bookData) => {
 
       await updateDoc(readingActivityDocRef, {
         recommended: !isBookRecommended,
+      });
+
+      await updateDoc(bookDocRef, {
+        title: bookData.title,
+        author: bookData.author,
+        urlImage: bookData.imageURL,
       });
     }
 
@@ -282,5 +292,27 @@ export const getBooksRead = async (userId) => {
   } catch (error) {
     console.error('읽은 책 목록을 가져오는 중 오류: ', error);
     throw error;
+  }
+};
+
+// 추천 수가 많은 책 가져오기(추천)
+export const getMostLikedBooks = async (limitCount) => {
+  try {
+    const q = query(
+      collection(appFirestore, 'books'),
+      orderBy('recommendedCount', 'desc'),
+      limit(limitCount),
+    );
+    const querySnapshot = await getDocs(q);
+
+    const mostRecommendedBooks = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return mostRecommendedBooks;
+  } catch (error) {
+    console.error('추천 수가 많은 책 가져오기 오류:', error);
+    return [];
   }
 };

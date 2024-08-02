@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from 'components/Common/Button/Button';
 import { useGetMyPhrase, useDeletePhrase } from 'Hooks/usePhrase';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import showMore from '../../assets/images/icon/show-more.svg';
 import ModalButton from 'components/Common/Modal/ModalButton';
 import Modal from 'components/Common/Modal/Modal';
@@ -81,7 +81,10 @@ export default function MyPhraseList() {
 
   return (
     <>
-      <FollowerTitle>글귀</FollowerTitle>
+      <FollowerTitle>
+        글귀
+        <SLink to={'/phraselist'}>전체 보기</SLink>
+      </FollowerTitle>
       <PhraseContainer>
         {myPhrase.length > 0 ? (
           <PhraseListUl>
@@ -154,6 +157,10 @@ export default function MyPhraseList() {
     </>
   );
 }
+
+const PhraseTitle = styled(FollowerTitle)`
+  position: relative;
+`;
 
 const PhraseContainer = styled.section`
   font-family: 'Pretendard-Regular', sans-serif;
@@ -238,4 +245,12 @@ const FollowerHeader = styled.header`
   font-size: var(--font-sm-size);
   border-top: ${(props) => (props.customStyle ? 'none' : 'solid 1px #e4e4e4')};
   border-bottom: ${(props) => (props.customStyle ? 'none' : 'solid 1px #e4e4e4')};
+`;
+
+const SLink = styled(Link)`
+  position: absolute;
+  transform: translateX(119px);
+  font-size: var(--font-xxs-size);
+  color: var(--gray-500);
+  line-height: initial;
 `;
